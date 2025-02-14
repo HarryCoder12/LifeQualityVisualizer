@@ -74,9 +74,10 @@ def get_features(place="Prague, Czechia"):
         {
             "name": "noise",
             "tags": {
-                "highway": ["motorway", "trunk"],
+                "highway": ["motorway", "trunk", "primary"],
             }
         }
+        #TODO: urady, 
     ]
 
     for feature in features:
