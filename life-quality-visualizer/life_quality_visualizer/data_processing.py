@@ -5,30 +5,32 @@ from shapely.geometry import Point
 import os
 import json
 
+
 def parse_geojson(geojson_data, file_name):
     # Load GeoJSON into a GeoDataFrame
-    
+
     gdf = gpd.GeoDataFrame.from_features(geojson_data["features"])
-    
+
     structured_data = gdf[["geometry"]].copy()
     structured_data["type"] = file_name.split(".")[0]
     # Before forloop
     for idx, rowData in structured_data.iterrows():
         # Check if the geometry is not a Point
-        if rowData['geometry'].geom_type != "Point":
-            if rowData['geometry'].geom_type == "LineString":
+        if rowData["geometry"].geom_type != "Point":
+            if rowData["geometry"].geom_type == "LineString":
                 # Convert the LineString to the first Point (or any specific point you prefer)
                 # Here, I'm converting to the first coordinate of the LineString
-                first_point = rowData['geometry'].coords[0]
-                structured_data.at[idx, 'geometry'] = Point(first_point)
+                first_point = rowData["geometry"].coords[0]
+                structured_data.at[idx, "geometry"] = Point(first_point)
             else:
                 # For any other type (e.g., Polygon), you could handle them similarly or just take a point from the geometry
                 # For example, let's take the centroid of a Polygon
-                structured_data.at[idx, 'geometry'] = rowData['geometry'].centroid
+                structured_data.at[idx, "geometry"] = rowData["geometry"].centroid
 
         # Print to verify the changes
         # print(structured_data.loc[idx, 'geometry'])
     return structured_data
+
 
 # Example usage
 def get_sanitezed_data():
@@ -38,12 +40,20 @@ def get_sanitezed_data():
     for file_name in os.listdir(directory_path):
         # Check if the file ends with .geojson
         if file_name.endswith(".geojson"):
-            file_path = os.path.join(directory_path, file_name)  # Get the full file path
+            file_path = os.path.join(
+                directory_path, file_name
+            )  # Get the full file path
             # Read GeoJSON file
             with open(file_path, "r", encoding="utf-8") as f:
                 geojson_data = json.load(f)
-            
+
             parsed_data = parse_geojson(geojson_data, file_name)
         parsed_data_list.append(parsed_data)
     result_list = pd.concat(parsed_data_list, ignore_index=True)
     return result_list
+
+
+if __name__ == "__main__":
+    gdf = get_sanitezed_data()
+    with open("sanitized-data/everything.geojson", "w", encoding="UTF-8") as f:
+        f.write(gdf.to_json())
