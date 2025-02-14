@@ -49,8 +49,8 @@ class GridClass:
 
     def __init__(self):
         self.feature_scores = [0, 0, 0, 0, 0, 0, 0, 0]
-        self.x = None
-        self.y = None
+        self.x = 0
+        self.y = 0
 
     def has_score(self):
         for score in self.feature_scores:
@@ -128,6 +128,8 @@ def get_score_map(c_map):
         for colIndex, cell in enumerate(row):
             if cell.has_data():
                 propagate_score(score_map, rowIndex, colIndex, cell)
+                score_map[rowIndex][colIndex].x = cell.x
+                score_map[rowIndex][colIndex].y = cell.y
     return score_map
 
 
@@ -147,9 +149,6 @@ def propagate_score(score_map, rowIndex, colIndex, cell):
                         score_map[x][y].feature_scores[feature_index] = max(
                             current, 1000 // distance
                         )  # idk if 1000 is good constant
-                score_map[x][y].x = cell.x
-                score_map[x][y].y = cell.y
-
 
 def convert_score_map_to_geo_json(score_map):
     features = []
