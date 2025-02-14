@@ -12,11 +12,13 @@ class ClusterQuality:
     features: list[bool, bool, bool, bool, bool, bool, bool]
     x: float
     y: float
+    valid: bool
 
     def __init__(self):
         self.features = [False, False, False, False, False, False, False]
         self.x = 0.0
         self.y = 0.0
+        valid = False
 
     def add_type(self, str_type, p):
         self.x = p.x  # take last geo coordinates
@@ -127,13 +129,11 @@ def get_score_map(c_map):
     for rowIndex, row in enumerate(c_map):
         for colIndex, cell in enumerate(row):
             if cell.has_data():
-                propagate_score(score_map, rowIndex, colIndex, cell)
-                score_map[rowIndex][colIndex].x = cell.x
-                score_map[rowIndex][colIndex].y = cell.y
+                propagate_score(score_map, c_map, rowIndex, colIndex, cell)
     return score_map
 
 
-def propagate_score(score_map, rowIndex, colIndex, cell):
+def propagate_score(score_map, c_map, rowIndex, colIndex, cell):
     INFLUENCE_RADIUS = 9
     for i in range(-INFLUENCE_RADIUS, INFLUENCE_RADIUS):
         for j in range(-INFLUENCE_RADIUS, INFLUENCE_RADIUS):
@@ -149,6 +149,8 @@ def propagate_score(score_map, rowIndex, colIndex, cell):
                         score_map[x][y].feature_scores[feature_index] = max(
                             current, 1000 // distance
                         )  # idk if 1000 is good constant
+                score_map[rowIndex][colIndex].x = c_map[rowIndex][colIndex].x
+                score_map[rowIndex][colIndex].y = c_map[rowIndex][colIndex].y
 
 def convert_score_map_to_geo_json(score_map):
     features = []
