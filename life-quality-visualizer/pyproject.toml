@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "life-quality-visualizer"
+version = "0.1.0"
+description = ""
+authors = ["susrex <susrex@protonmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+osmnx = "^2.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
