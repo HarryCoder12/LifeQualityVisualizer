@@ -14,7 +14,28 @@ def get_features(place="Prague, Czechia"):
         },
         {
             "name": "sports",
-            "tags": {"building": ["sports_centre", "stadium", "sports_hall"]},
+            "tags": {
+                "building": ["sports_centre", "stadium", "sports_hall"],
+                "leisure": [
+                    "fitness_center",
+                    "fitness_station",
+                    "sports_hall",
+                    "stadium",
+                    "swimming_pool",
+                    "swimming_area",
+                    "track",
+                    "ice_rink",
+                    "dog_park",
+                    "disc_golf_course",
+                ],
+            },
+        },
+        {
+            "name": "greenAreas",
+            "tags": {
+                "landuse": ["forest", "grass"],
+                "leisure": ["park", "garden"],
+            },
         },
     ]
 
