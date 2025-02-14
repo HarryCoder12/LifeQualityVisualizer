@@ -21,8 +21,12 @@ class ClusterQuality:
     sport_facility: bool
     shop: bool
     restaurant: bool
+    x: float
+    y: float
 
-    def add_type(self, str_type):
+    def add_type(self, str_type, p):
+        self.x = p.x # take last geo coordinates
+        self.y = p.y
         if str_type == "publicTransport":
             self.other_public_transport = True
         elif str_type == "schools":
@@ -41,8 +45,19 @@ class ClusterQuality:
             print(str_type)
             raise Exception("Unknown type")
 
+    def has_data(self):
+        return (
+            self.subway
+            or self.other_public_transport
+            or self.school
+            or self.green_area
+            or self.health_care
+            or self.sport_facility
+            or self.restaurant
+        )
 
-SIZE = 1000 # grid size 
+
+SIZE = 1000  # grid size
 ONE_METER_X = 0.00001425
 WIDTH_X = ONE_METER_X * SIZE
 ONE_METER_Y = 0.000008989
@@ -88,9 +103,9 @@ def place_in_cluster(cluster_map, point, type, source, width, height):
     if not is_in_area(point, source, width, height):
         return
 
-    point_counter += 1;
+    point_counter += 1
     x, y = convert_to_cluster_index(point, source)
-    cluster_map[x][y].add_type(type)
+    cluster_map[x][y].add_type(type, point)
 
 
 def convert_to_cluster_index(point, source):
@@ -102,7 +117,9 @@ def convert_to_cluster_index(point, source):
 if __name__ == "__main__":
     cluster_map = [
         [
-            ClusterQuality(False, False, False, False, False, False, False, False)
+            ClusterQuality(
+                False, False, False, False, False, False, False, False, 0.0, 0.0
+            )
             for _ in range(SIZE)
         ]
         for _ in range(SIZE)
@@ -115,7 +132,13 @@ if __name__ == "__main__":
         type = row["type"]
         place_in_cluster(cluster_map, point, type, SOURCE, WIDTH_X, HEIGHT_Y)
     # print(cluster_map)
-    print(f"diagonal length: {
+
+    for row in cluster_map:
+        for cell in row:
+            if cell.has_data():
+                print(cell)
+    print(
+        f"diagonal length: {
         haversine(SOURCE.x, SOURCE.y, SOURCE.x + WIDTH_X, SOURCE.y + HEIGHT_Y)}"
     )  # size of diagonal
     print(f"point count: {point_counter}")
