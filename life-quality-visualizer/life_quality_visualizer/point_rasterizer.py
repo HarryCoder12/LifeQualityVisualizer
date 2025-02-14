@@ -2,6 +2,7 @@ import geopandas
 from geopandas import GeoDataFrame
 from math import radians, cos, sin, asin, sqrt
 from dataclasses import dataclass
+from data_processing import get_sanitezed_data
 
 @dataclass
 class Point:
