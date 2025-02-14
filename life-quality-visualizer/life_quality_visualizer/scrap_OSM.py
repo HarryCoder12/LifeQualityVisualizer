@@ -37,6 +37,47 @@ def get_features(place="Prague, Czechia"):
                 "leisure": ["park", "garden"],
             },
         },
+        {
+            "name": "publicTransport",
+            "tags": {
+                "amenity": ["bus_station", "ferry_terminal", "train_station"],
+                "highway": ["bus_stop"],
+                "public_transport": ["station"],
+            },
+        },
+        {
+            "name": "shops",
+            "tags": {
+                "shop": [
+                    "convenience",
+                    "supermarket",
+                    "bakery",
+                    "butcher",
+                    "food",
+                    "general",
+                ]
+            },
+        },
+        {
+            "name": "healthcare",
+            "tags": {
+                "amenity": ["clinic", "hospital", "pharmacy"],
+                "healthcare": ["centre", "physiotherapist", "psychotherapist", "rehabilitation"],
+            },
+        },
+        {
+            "name": "restaurants",
+            "tags": {
+                "amenity": ["bar", "cafe", "fast_food", "pub", "restaurant"],
+            },
+        },
+        {
+            "name": "noise",
+            "tags": {
+                "highway": ["motorway", "trunk", "primary"],
+            }
+        }
+        #TODO: urady, 
     ]
 
     for feature in features:
