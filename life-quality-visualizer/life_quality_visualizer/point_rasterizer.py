@@ -13,8 +13,7 @@ class Point:
 
 @dataclass
 class ClusterQuality:
-    subway: bool
-    other_public_transport: bool
+    public_transport: bool
     school: bool
     green_area: bool
     health_care: bool
@@ -28,7 +27,7 @@ class ClusterQuality:
         self.x = p.x  # take last geo coordinates
         self.y = p.y
         if str_type == "publicTransport":
-            self.other_public_transport = True
+            self.public_transport = True
         elif str_type == "schools":
             self.school = True
         elif str_type == "greenAreas":
@@ -47,8 +46,7 @@ class ClusterQuality:
 
     def has_data(self):
         return (
-            self.subway
-            or self.other_public_transport
+            self.public_transport
             or self.school
             or self.green_area
             or self.health_care
@@ -56,7 +54,21 @@ class ClusterQuality:
             or self.restaurant
         )
 
+@dataclass
+class GridClass:
+    public_transport: float = 0.0
+    school: float = 0.0
+    green_area: float = 0.0
+    health_care: float = 0.0
+    sport_facility: float = 0.0
+    shop: float = 0.0
+    restaurant: float = 0.0
+    x: float = 0.0
+    y: float = 0.0
 
+
+## XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+SIZE = 1000  # grid size
 ONE_METER_X = 0.00001425
 FIELD_SIZE_X = ONE_METER_X * 10
 SIZE_X = 1000  # cells count each FIELD_SIZE_X width
@@ -71,7 +83,6 @@ HEIGHT_Y = FIELD_SIZE_Y * SIZE_Y
 # SOURCE = Point(14.445755, 50.085048)
 SOURCE = Point(14.443862, 50.085356)
 point_counter = 0
-
 
 def haversine(lon1, lat1, lon2, lat2):
     """
@@ -123,13 +134,13 @@ if __name__ == "__main__":
     cluster_map = [
         [
             ClusterQuality(
-                False, False, False, False, False, False, False, False, 0.0, 0.0
+                False, False, False, False, False, False, False, 0.0, 0.0
             )
             for _ in range(SIZE_Y)
         ]
         for _ in range(SIZE_X)
     ]
-
+    grid_map = [[GridClass(x=i, y=j) for j in range(SIZE)] for i in range(SIZE)]
     # sanitized_data = geopandas.read_file("sanitized-data/everything.geojson")
     # print(sanitized_data)
     for index, row in get_sanitezed_data().iterrows():
@@ -138,12 +149,14 @@ if __name__ == "__main__":
         place_in_cluster(cluster_map, point, type, SOURCE, WIDTH_X, HEIGHT_Y)
     # print(cluster_map)
 
-    for row in cluster_map:
-        for cell in row:
+    for rowIndex, row in enumerate(cluster_map):
+        for colIndex, cell in enumerate(row):
             if cell.has_data():
-                print(cell)
+                grid_map[rowIndex][colIndex] = GridClass()
     print(
-        f"diagonal length: {
-        haversine(SOURCE.x, SOURCE.y, SOURCE.x + WIDTH_X, SOURCE.y + HEIGHT_Y)}"
+        f"diagonal length: {haversine(SOURCE.x, SOURCE.y, SOURCE.x + WIDTH_X, SOURCE.y + HEIGHT_Y)}"
     )  # size of diagonal
     print(f"point count: {point_counter}")
+
+                
+
