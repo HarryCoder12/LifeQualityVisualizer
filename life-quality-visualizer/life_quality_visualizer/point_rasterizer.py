@@ -73,7 +73,6 @@ def haversine(lon1, lat1, lon2, lat2):
 
 
 def is_in_area(point, source, width, height):
-    # print(point, source)
     if (
         source.x <= point.x <= source.x + width
         and source.y <= point.y <= source.y + height
@@ -84,7 +83,6 @@ def is_in_area(point, source, width, height):
 
 def place_in_cluster(cluster_map, point, type, source, width, height):
     global point_counter
-    # if isinstance(point, geopandas.shapely.geome):
     if point.geom_type != "Point":
         return
     if not is_in_area(point, source, width, height):
@@ -92,7 +90,6 @@ def place_in_cluster(cluster_map, point, type, source, width, height):
 
     point_counter += 1;
     x, y = convert_to_cluster_index(point, source)
-    print(x, y)
     cluster_map[x][y].add_type(type)
 
 
@@ -114,8 +111,6 @@ if __name__ == "__main__":
     # sanitized_data = geopandas.read_file("sanitized-data/everything.geojson")
     # print(sanitized_data)
     for index, row in get_sanitezed_data().iterrows():
-        # point = row[1][0]
-        # type = row[1][1]
         point = row["geometry"]
         type = row["type"]
         place_in_cluster(cluster_map, point, type, SOURCE, WIDTH_X, HEIGHT_Y)
