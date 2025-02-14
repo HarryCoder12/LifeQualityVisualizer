@@ -25,7 +25,7 @@ class ClusterQuality:
     y: float
 
     def add_type(self, str_type, p):
-        self.x = p.x # take last geo coordinates
+        self.x = p.x  # take last geo coordinates
         self.y = p.y
         if str_type == "publicTransport":
             self.other_public_transport = True
@@ -57,11 +57,16 @@ class ClusterQuality:
         )
 
 
-SIZE = 1000  # grid size
 ONE_METER_X = 0.00001425
-WIDTH_X = ONE_METER_X * SIZE
+FIELD_SIZE_X = ONE_METER_X * 10
+SIZE_X = 1000  # cells count each FIELD_SIZE_X width
+WIDTH_X = FIELD_SIZE_X * SIZE_X
+
 ONE_METER_Y = 0.000008989
-HEIGHT_Y = ONE_METER_Y * SIZE
+FIELD_SIZE_Y = ONE_METER_Y * 10
+SIZE_Y = 100  # cells count each FIELD_SIZE_Y height
+HEIGHT_Y = FIELD_SIZE_Y * SIZE_Y
+
 # SOURCE = Point(50.054153, 14.347182)
 # SOURCE = Point(14.445755, 50.085048)
 SOURCE = Point(14.443862, 50.085356)
@@ -109,8 +114,8 @@ def place_in_cluster(cluster_map, point, type, source, width, height):
 
 
 def convert_to_cluster_index(point, source):
-    x = int((point.x - source.x) / ONE_METER_X)
-    y = int((point.y - source.y) / ONE_METER_Y)
+    x = int((point.x - source.x) / FIELD_SIZE_X)
+    y = int((point.y - source.y) / FIELD_SIZE_Y)
     return x, y
 
 
@@ -120,9 +125,9 @@ if __name__ == "__main__":
             ClusterQuality(
                 False, False, False, False, False, False, False, False, 0.0, 0.0
             )
-            for _ in range(SIZE)
+            for _ in range(SIZE_Y)
         ]
-        for _ in range(SIZE)
+        for _ in range(SIZE_X)
     ]
 
     # sanitized_data = geopandas.read_file("sanitized-data/everything.geojson")
