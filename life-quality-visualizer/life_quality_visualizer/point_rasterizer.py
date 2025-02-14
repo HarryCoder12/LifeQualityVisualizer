@@ -4,10 +4,12 @@ from math import radians, cos, sin, asin, sqrt
 from dataclasses import dataclass
 from data_processing import get_sanitezed_data
 
+
 @dataclass
 class Point:
     x: float
     y: float
+
 
 @dataclass
 class ClusterQuality:
@@ -27,7 +29,7 @@ class ClusterQuality:
             self.school = True
         elif str_type == "greenArea":
             self.green_area = True
-        elif str_type == "health_care":
+        elif str_type == "healthcare":
             self.health_care = True
         elif str_type == "sports":
             self.sport_facility = True
@@ -35,6 +37,9 @@ class ClusterQuality:
             self.shop = True
         elif str_type == "restaurants":
             self.restaurant = True
+        else:
+            print(str_type)
+            raise Exception("Unknown type")
 
 
 SIZE = 100
@@ -42,7 +47,8 @@ ONE_METER_X = 0.00001425
 WIDTH_X = ONE_METER_X * SIZE
 ONE_METER_Y = 0.000008989
 HEIGHT_Y = ONE_METER_Y * SIZE
-SOURCE = Point(50.054153,14.347182)
+# SOURCE = Point(50.054153, 14.347182)
+SOURCE = Point(14.445755, 50.085048)
 
 
 def haversine(lon1, lat1, lon2, lat2):
@@ -65,6 +71,7 @@ def haversine(lon1, lat1, lon2, lat2):
 
 
 def is_in_area(point, source, width, height):
+    # print(point, source)
     if (
         source.x <= point.x <= source.x + width
         and source.y <= point.y <= source.y + height
@@ -74,29 +81,35 @@ def is_in_area(point, source, width, height):
 
 
 def place_in_cluster(cluster_map, point, type, source, width, height):
-    #if isinstance(point, geopandas.shapely.geome):
-    if point.geom_type != "Point":
-        return
+    # if isinstance(point, geopandas.shapely.geome):
+    # if point.geom_type != "Point":
+    #     return
     if not is_in_area(point, source, width, height):
         return
 
+    print("in area")
     x, y = convert_to_cluster_index(point, source)
-    cluster_map[x][y].add_type(type) 
+    print(x, y)
+    cluster_map[x][y].add_type(type)
 
 
 def convert_to_cluster_index(point, source):
-    x = (int((point.x - source.x) / ONE_METER_X),)
+    x = int((point.x - source.x) / ONE_METER_X)
     y = int((point.y - source.y) / ONE_METER_Y)
     return x, y
 
 
 if __name__ == "__main__":
     cluster_map = [
-        [ClusterQuality(False, False, False, False, False, False, False, False) for _ in range(SIZE)]
+        [
+            ClusterQuality(False, False, False, False, False, False, False, False)
+            for _ in range(SIZE)
+        ]
         for _ in range(SIZE)
     ]
 
-    gdf = geopandas.read_file("exported-data/schools.geojson") # replace with Peter sanitized data
-    for row in gdf:
-        place_in_cluster(cluster_map, row["geometry"], row["type"], SOURCE, WIDTH_X, HEIGHT_Y)
-    print(cluster_map)
+    for row in get_sanitezed_data().iterrows():
+        point = row[1][0]
+        type = row[1][1]
+        place_in_cluster(cluster_map, point, type, SOURCE, WIDTH_X, HEIGHT_Y)
+    # print(cluster_map)
