@@ -24,7 +24,7 @@ class ClusterQuality:
     y: float
 
     def add_type(self, str_type, p):
-        self.x = p.x # take last geo coordinates
+        self.x = p.x  # take last geo coordinates
         self.y = p.y
         if str_type == "publicTransport":
             self.public_transport = True
@@ -70,13 +70,37 @@ class GridClass:
 ## XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 SIZE = 1000  # grid size
 ONE_METER_X = 0.00001425
-WIDTH_X = ONE_METER_X * SIZE
+FIELD_SIZE_X = ONE_METER_X * 10
+SIZE_X = 1000  # cells count each FIELD_SIZE_X width
+WIDTH_X = FIELD_SIZE_X * SIZE_X
+
 ONE_METER_Y = 0.000008989
-HEIGHT_Y = ONE_METER_Y * SIZE
+FIELD_SIZE_Y = ONE_METER_Y * 10
+SIZE_Y = 100  # cells count each FIELD_SIZE_Y height
+HEIGHT_Y = FIELD_SIZE_Y * SIZE_Y
+
 # SOURCE = Point(50.054153, 14.347182)
 # SOURCE = Point(14.445755, 50.085048)
 SOURCE = Point(14.443862, 50.085356)
 point_counter = 0
+
+def haversine(lon1, lat1, lon2, lat2):
+    """
+    Calculate the great circle distance in kilometers between two points
+    on the earth (specified in decimal degrees)
+
+    source: https://stackoverflow.com/a/4913653
+    """
+    # convert decimal degrees to radians
+    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+
+    # haversine formula
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+    c = 2 * asin(sqrt(a))
+    r = 6371  # Radius of earth in kilometers. Use 3956 for miles. Determines return value units.
+    return c * r * 1000  # return in meters
 
 
 def is_in_area(point, source, width, height):
@@ -101,18 +125,20 @@ def place_in_cluster(cluster_map, point, type, source, width, height):
 
 
 def convert_to_cluster_index(point, source):
-    x = int((point.x - source.x) / ONE_METER_X)
-    y = int((point.y - source.y) / ONE_METER_Y)
+    x = int((point.x - source.x) / FIELD_SIZE_X)
+    y = int((point.y - source.y) / FIELD_SIZE_Y)
     return x, y
 
 
 if __name__ == "__main__":
     cluster_map = [
         [
-            ClusterQuality(*([False] * 7), 0.0, 0.0)
-            for _ in range(SIZE)
+            ClusterQuality(
+                False, False, False, False, False, False, False, False, 0.0, 0.0
+            )
+            for _ in range(SIZE_Y)
         ]
-        for _ in range(SIZE)
+        for _ in range(SIZE_X)
     ]
     grid_map = [[GridClass(x=i, y=j) for j in range(SIZE)] for i in range(SIZE)]
     # sanitized_data = geopandas.read_file("sanitized-data/everything.geojson")
@@ -127,7 +153,11 @@ if __name__ == "__main__":
         for colIndex, cell in enumerate(row):
             if cell.has_data():
                 grid_map[rowIndex][colIndex] = GridClass()
-
+    print(
+        f"diagonal length: {
+        haversine(SOURCE.x, SOURCE.y, SOURCE.x + WIDTH_X, SOURCE.y + HEIGHT_Y)}"
+    )  # size of diagonal
+    print(f"point count: {point_counter}")
 
                 
 
