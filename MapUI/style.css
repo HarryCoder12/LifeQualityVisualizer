@@ -1,0 +1,32 @@
+:root {
+    /* Define color variables */
+    --primary-color: #007bff; /* Blue */
+    --secondary-color: #6c757d; /* Gray */
+    --success-color: #28a745; /* Green */
+    --danger-color: #dc3545; /* Red */
+    --warning-color: #ffc107; /* Yellow */
+    --info-color: #17a2b8; /* Light Blue */
+    --light-color: #f8f9fa; /* Light Gray */
+    --dark-color: #343a40; /* Dark Gray */
+    --white-color: #ffffff; /* White */
+    --black-color: #000000; /* Black */
+
+    /* Optionally define other colors for specific uses */
+    --background-color: #f1f1f1;
+    --text-color: #333333;
+    --border-color: #e0e0e0;
+}
+
+#map {
+    height: 100vh; /* Full screen height */
+    transition: margin-right 0.3s ease-in-out;
+}
+
+
+/* For responsive UI */
+@media (max-width: 767px) {
+
+    #map {
+        margin-right: 0; /* Adjust the map margin when panel is hidden */
+    }
+}
