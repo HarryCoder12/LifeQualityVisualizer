@@ -13,61 +13,57 @@ class Point:
 
 @dataclass
 class ClusterQuality:
-    public_transport: bool
-    school: bool
-    green_area: bool
-    health_care: bool
-    sport_facility: bool
-    shop: bool
-    restaurant: bool
+    # ordering: public_transport, school, green_area, health_care, sport_facility, shop, restaurant
+    features: list[bool, bool, bool, bool, bool, bool, bool]
     x: float
     y: float
+
+    def __init__(self):
+        self.features = [False, False, False, False, False, False, False]
+        self.x = 0.0
+        self.y = 0.0
 
     def add_type(self, str_type, p):
         self.x = p.x  # take last geo coordinates
         self.y = p.y
-        if str_type == "publicTransport":
-            self.public_transport = True
-        elif str_type == "schools":
-            self.school = True
-        elif str_type == "greenAreas":
-            self.green_area = True
-        elif str_type == "healthcare":
-            self.health_care = True
-        elif str_type == "sports":
-            self.sport_facility = True
-        elif str_type == "shops":
-            self.shop = True
-        elif str_type == "restaurants":
-            self.restaurant = True
-        else:
-            print(str_type)
-            raise Exception("Unknown type")
+        names = [
+            "publicTransport",
+            "schools",
+            "greenAreas",
+            "healthcare",
+            "sports",
+            "shops",
+            "restaurants",
+        ]
+        i = names.index(str_type)
+        if i >= 0:
+            self.features[i] = True
 
     def has_data(self):
-        return (
-            self.public_transport
-            or self.school
-            or self.green_area
-            or self.health_care
-            or self.sport_facility
-            or self.restaurant
-        )
+        for feature in self.features:
+            if feature:
+                return True
+        return False
+
 
 @dataclass
 class GridClass:
-    public_transport: float = 0.0
-    school: float = 0.0
-    green_area: float = 0.0
-    health_care: float = 0.0
-    sport_facility: float = 0.0
-    shop: float = 0.0
-    restaurant: float = 0.0
-    x: float = 0.0
-    y: float = 0.0
+    feature_scores: list[int, int, int, int, int, int, int, int]
+    x: float
+    y: float
+
+    def __init__(self):
+        self.feature_scores = [0, 0, 0, 0, 0, 0, 0, 0]
+        self.x = None
+        self.y = None
+
+    def has_score(self):
+        for score in self.feature_scores:
+            if score > 0:
+                return True
+        return False
 
 
-## XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 SIZE = 1000  # grid size
 ONE_METER_X = 0.00001425
 FIELD_SIZE_X = ONE_METER_X * 10
@@ -83,6 +79,7 @@ HEIGHT_Y = FIELD_SIZE_Y * SIZE_Y
 # SOURCE = Point(14.445755, 50.085048)
 SOURCE = Point(14.443862, 50.085356)
 point_counter = 0
+
 
 def haversine(lon1, lat1, lon2, lat2):
     """
@@ -130,17 +127,45 @@ def convert_to_cluster_index(point, source):
     return x, y
 
 
+def get_score_map(c_map):
+    score_map = [[GridClass() for _ in range(SIZE_Y)] for _ in range(SIZE_X)]
+    for rowIndex, row in enumerate(c_map):
+        for colIndex, cell in enumerate(row):
+            if cell.has_data():
+                propagate_score(score_map, rowIndex, colIndex, cell)
+    return score_map
+
+
+def propagate_score(score_map, rowIndex, colIndex, cell):
+    INFLUENCE_RADIUS = 9
+    for i in range(-INFLUENCE_RADIUS, INFLUENCE_RADIUS):
+        for j in range(-INFLUENCE_RADIUS, INFLUENCE_RADIUS):
+            x = rowIndex + i
+            y = colIndex + j
+            if is_coord_valid(x, y):
+                distance = abs(i) + abs(j)
+                if distance == 0:  # do not influence the cell itself
+                    return
+                for feature_index, feature in enumerate(cell.features):
+                    if feature:
+                        current = score_map[x][y].feature_scores[feature_index]
+                        score_map[x][y].feature_scores[feature_index] = max(
+                            current, 1000 // distance
+                        )  # idk if 1000 is good constant
+                score_map[x][y].x = cell.x
+                score_map[x][y].y = cell.y
+
+def convert_score_map_to_geo_json(score_map):
+    
+
+
+def is_coord_valid(x, y):
+    return 0 <= x < SIZE_X and 0 <= y < SIZE_Y
+
+
 if __name__ == "__main__":
-    cluster_map = [
-        [
-            ClusterQuality(
-                False, False, False, False, False, False, False, 0.0, 0.0
-            )
-            for _ in range(SIZE_Y)
-        ]
-        for _ in range(SIZE_X)
-    ]
-    grid_map = [[GridClass(x=i, y=j) for j in range(SIZE)] for i in range(SIZE)]
+    cluster_map = [[ClusterQuality() for _ in range(SIZE_Y)] for _ in range(SIZE_X)]
+
     # sanitized_data = geopandas.read_file("sanitized-data/everything.geojson")
     # print(sanitized_data)
     for index, row in get_sanitezed_data().iterrows():
@@ -149,14 +174,16 @@ if __name__ == "__main__":
         place_in_cluster(cluster_map, point, type, SOURCE, WIDTH_X, HEIGHT_Y)
     # print(cluster_map)
 
-    for rowIndex, row in enumerate(cluster_map):
-        for colIndex, cell in enumerate(row):
-            if cell.has_data():
-                grid_map[rowIndex][colIndex] = GridClass()
     print(
         f"diagonal length: {haversine(SOURCE.x, SOURCE.y, SOURCE.x + WIDTH_X, SOURCE.y + HEIGHT_Y)}"
     )  # size of diagonal
     print(f"point count: {point_counter}")
 
-                
-
+    score_map = get_score_map(cluster_map)
+    counter = 0
+    for cell in score_map:
+        for c in cell:
+            if c.has_score():
+                counter += 1
+                print(c)
+    print(counter)
