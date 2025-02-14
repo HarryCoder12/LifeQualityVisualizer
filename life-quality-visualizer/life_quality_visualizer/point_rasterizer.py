@@ -27,7 +27,7 @@ class ClusterQuality:
             self.other_public_transport = True
         elif str_type == "schools":
             self.school = True
-        elif str_type == "greenArea":
+        elif str_type == "greenAreas":
             self.green_area = True
         elif str_type == "healthcare":
             self.health_care = True
@@ -42,13 +42,15 @@ class ClusterQuality:
             raise Exception("Unknown type")
 
 
-SIZE = 100
+SIZE = 1000 # grid size 
 ONE_METER_X = 0.00001425
 WIDTH_X = ONE_METER_X * SIZE
 ONE_METER_Y = 0.000008989
 HEIGHT_Y = ONE_METER_Y * SIZE
 # SOURCE = Point(50.054153, 14.347182)
-SOURCE = Point(14.445755, 50.085048)
+# SOURCE = Point(14.445755, 50.085048)
+SOURCE = Point(14.443862, 50.085356)
+point_counter = 0
 
 
 def haversine(lon1, lat1, lon2, lat2):
@@ -81,13 +83,14 @@ def is_in_area(point, source, width, height):
 
 
 def place_in_cluster(cluster_map, point, type, source, width, height):
+    global point_counter
     # if isinstance(point, geopandas.shapely.geome):
-    # if point.geom_type != "Point":
-    #     return
+    if point.geom_type != "Point":
+        return
     if not is_in_area(point, source, width, height):
         return
 
-    print("in area")
+    point_counter += 1;
     x, y = convert_to_cluster_index(point, source)
     print(x, y)
     cluster_map[x][y].add_type(type)
@@ -108,8 +111,16 @@ if __name__ == "__main__":
         for _ in range(SIZE)
     ]
 
-    for row in get_sanitezed_data().iterrows():
-        point = row[1][0]
-        type = row[1][1]
+    # sanitized_data = geopandas.read_file("sanitized-data/everything.geojson")
+    # print(sanitized_data)
+    for index, row in get_sanitezed_data().iterrows():
+        # point = row[1][0]
+        # type = row[1][1]
+        point = row["geometry"]
+        type = row["type"]
         place_in_cluster(cluster_map, point, type, SOURCE, WIDTH_X, HEIGHT_Y)
     # print(cluster_map)
+    print(f"diagonal length: {
+        haversine(SOURCE.x, SOURCE.y, SOURCE.x + WIDTH_X, SOURCE.y + HEIGHT_Y)}"
+    )  # size of diagonal
+    print(f"point count: {point_counter}")
