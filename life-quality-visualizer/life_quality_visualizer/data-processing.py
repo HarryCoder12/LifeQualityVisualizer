@@ -31,7 +31,7 @@ def parse_geojson(geojson_data, file_name):
     return structured_data
 
 # Example usage
-if __name__ == "__main__":
+def get_sanitezed_data():
     directory_path = "exported-data"  # Replace with your directory path
     parsed_data_list = []
     # Loop through all files in the directory
@@ -46,5 +46,4 @@ if __name__ == "__main__":
             parsed_data = parse_geojson(geojson_data, file_name)
         parsed_data_list.append(parsed_data)
     result_list = pd.concat(parsed_data_list, ignore_index=True)
-    print(result_list)
-
+    return result_list
