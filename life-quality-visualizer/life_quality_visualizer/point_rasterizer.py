@@ -134,7 +134,7 @@ if __name__ == "__main__":
     cluster_map = [
         [
             ClusterQuality(
-                False, False, False, False, False, False, False, False, 0.0, 0.0
+                False, False, False, False, False, False, False, 0.0, 0.0
             )
             for _ in range(SIZE_Y)
         ]
@@ -154,8 +154,7 @@ if __name__ == "__main__":
             if cell.has_data():
                 grid_map[rowIndex][colIndex] = GridClass()
     print(
-        f"diagonal length: {
-        haversine(SOURCE.x, SOURCE.y, SOURCE.x + WIDTH_X, SOURCE.y + HEIGHT_Y)}"
+        f"diagonal length: {haversine(SOURCE.x, SOURCE.y, SOURCE.x + WIDTH_X, SOURCE.y + HEIGHT_Y)}"
     )  # size of diagonal
     print(f"point count: {point_counter}")
 
