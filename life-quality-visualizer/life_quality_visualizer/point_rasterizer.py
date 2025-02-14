@@ -14,15 +14,14 @@ class ClusterQuality:
     y: float
     valid: bool
 
-    def __init__(self):
+    def __init__(self, x, y):
         self.features = [False, False, False, False, False, False, False]
-        self.x = 0.0
-        self.y = 0.0
-        valid = False
+        self.x = x
+        self.y = y
 
     def add_type(self, str_type, p):
-        self.x = p.x  # take last geo coordinates
-        self.y = p.y
+        # self.x = p.x  # take last geo coordinates
+        # self.y = p.y
         names = [
             "publicTransport",
             "schools",
@@ -152,6 +151,7 @@ def propagate_score(score_map, c_map, rowIndex, colIndex, cell):
                 score_map[rowIndex][colIndex].x = c_map[rowIndex][colIndex].x
                 score_map[rowIndex][colIndex].y = c_map[rowIndex][colIndex].y
 
+
 def convert_score_map_to_geo_json(score_map):
     features = []
     geometry = []
@@ -169,7 +169,13 @@ def is_coord_valid(x, y):
 
 
 if __name__ == "__main__":
-    cluster_map = [[ClusterQuality() for _ in range(SIZE_Y)] for _ in range(SIZE_X)]
+    cluster_map = [
+        [
+            ClusterQuality(SOURCE.y + y * FIELD_SIZE_Y, SOURCE.x + x * FIELD_SIZE_X)
+            for y in range(SIZE_Y)
+        ]
+        for x in range(SIZE_X)
+    ]
 
     # sanitized_data = geopandas.read_file("sanitized-data/everything.geojson")
     # print(sanitized_data)
