@@ -171,7 +171,7 @@ def is_coord_valid(x, y):
 if __name__ == "__main__":
     cluster_map = [
         [
-            ClusterQuality(SOURCE.y + y * FIELD_SIZE_Y, SOURCE.x + x * FIELD_SIZE_X)
+            ClusterQuality(SOURCE.x + x * FIELD_SIZE_X, SOURCE.y + y * FIELD_SIZE_Y)
             for y in range(SIZE_Y)
         ]
         for x in range(SIZE_X)
