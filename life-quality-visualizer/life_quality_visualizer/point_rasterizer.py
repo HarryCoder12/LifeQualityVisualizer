@@ -56,16 +56,18 @@ class ClusterQuality:
 
 @dataclass
 class GridClass:
-    public_transport: float
-    school: float
-    green_area: float
-    health_care: float
-    sport_facility: float
-    shop: float
-    restaurant: float
-    x: float
-    y: float
+    public_transport: float = 0.0
+    school: float = 0.0
+    green_area: float = 0.0
+    health_care: float = 0.0
+    sport_facility: float = 0.0
+    shop: float = 0.0
+    restaurant: float = 0.0
+    x: float = 0.0
+    y: float = 0.0
 
+
+## XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 SIZE = 1000  # grid size
 ONE_METER_X = 0.00001425
 WIDTH_X = ONE_METER_X * SIZE
@@ -112,7 +114,7 @@ if __name__ == "__main__":
         ]
         for _ in range(SIZE)
     ]
-
+    grid_map = [[GridClass(x=i, y=j) for j in range(SIZE)] for i in range(SIZE)]
     # sanitized_data = geopandas.read_file("sanitized-data/everything.geojson")
     # print(sanitized_data)
     for index, row in get_sanitezed_data().iterrows():
@@ -121,8 +123,11 @@ if __name__ == "__main__":
         place_in_cluster(cluster_map, point, type, SOURCE, WIDTH_X, HEIGHT_Y)
     # print(cluster_map)
 
-    for row in cluster_map:
-        for cell in row:
+    for rowIndex, row in enumerate(cluster_map):
+        for colIndex, cell in enumerate(row):
             if cell.has_data():
-                print(cell)
+                grid_map[rowIndex][colIndex] = GridClass()
+
+
+                
 
