@@ -16,6 +16,24 @@ class ClusterQuality:
     green_area: bool
     health_care: bool
     sport_facility: bool
+    shop: bool
+    restaurant: bool
+
+    def add_type(self, str_type):
+        if str_type == "publicTransport":
+            self.other_public_transport = True
+        elif str_type == "schools":
+            self.school = True
+        elif str_type == "greenArea":
+            self.green_area = True
+        elif str_type == "health_care":
+            self.health_care = True
+        elif str_type == "sports":
+            self.sport_facility = True
+        elif str_type == "shops":
+            self.shop = True
+        elif str_type == "restaurants":
+            self.restaurant = True
 
 
 SIZE = 100
@@ -54,7 +72,7 @@ def is_in_area(point, source, width, height):
     return False
 
 
-def place_in_cluster(cluster_map, point, source, width, height):
+def place_in_cluster(cluster_map, point, type, source, width, height):
     #if isinstance(point, geopandas.shapely.geome):
     if point.geom_type != "Point":
         return
@@ -62,7 +80,7 @@ def place_in_cluster(cluster_map, point, source, width, height):
         return
 
     x, y = convert_to_cluster_index(point, source)
-    cluster_map[x][y] = 1  # TODO: put valid value here
+    cluster_map[x][y].add_type(type) 
 
 
 def convert_to_cluster_index(point, source):
@@ -73,11 +91,11 @@ def convert_to_cluster_index(point, source):
 
 if __name__ == "__main__":
     cluster_map = [
-        [ClusterQuality(False, False, False, False, False, False) for _ in range(SIZE)]
+        [ClusterQuality(False, False, False, False, False, False, False, False) for _ in range(SIZE)]
         for _ in range(SIZE)
     ]
 
-    gdf = geopandas.read_file("exported-data/schools.geojson")
-    for point in gdf["geometry"]:
-        place_in_cluster(cluster_map, point, SOURCE, WIDTH_X, HEIGHT_Y)
+    gdf = geopandas.read_file("exported-data/schools.geojson") # replace with Peter sanitized data
+    for row in gdf:
+        place_in_cluster(cluster_map, row["geometry"], row["type"], SOURCE, WIDTH_X, HEIGHT_Y)
     print(cluster_map)
