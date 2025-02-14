@@ -3,12 +3,7 @@ from geopandas import GeoDataFrame
 from math import radians, cos, sin, asin, sqrt
 from dataclasses import dataclass
 from data_processing import get_sanitezed_data
-
-
-@dataclass
-class Point:
-    x: float
-    y: float
+from shapely.geometry import Point
 
 
 @dataclass
@@ -155,8 +150,17 @@ def propagate_score(score_map, rowIndex, colIndex, cell):
                 score_map[x][y].x = cell.x
                 score_map[x][y].y = cell.y
 
+
 def convert_score_map_to_geo_json(score_map):
-    
+    features = []
+    geometry = []
+    for row in score_map:
+        for cell in row:
+            if cell.has_score():
+                features.append(cell.feature_scores)
+                geometry.append(Point(cell.x, cell.y))
+    gdf = GeoDataFrame({"geometry": geometry, "feature": features}, crs="EPSG:4326")
+    return gdf
 
 
 def is_coord_valid(x, y):
@@ -174,16 +178,12 @@ if __name__ == "__main__":
         place_in_cluster(cluster_map, point, type, SOURCE, WIDTH_X, HEIGHT_Y)
     # print(cluster_map)
 
-    print(
-        f"diagonal length: {haversine(SOURCE.x, SOURCE.y, SOURCE.x + WIDTH_X, SOURCE.y + HEIGHT_Y)}"
-    )  # size of diagonal
-    print(f"point count: {point_counter}")
-
     score_map = get_score_map(cluster_map)
-    counter = 0
-    for cell in score_map:
-        for c in cell:
-            if c.has_score():
-                counter += 1
-                print(c)
-    print(counter)
+    gdf = convert_score_map_to_geo_json(score_map)
+    with open("sanitized-data/lifeQuality.geojson", "w", encoding="UTF-8") as f:
+        f.write(gdf.to_json())
+
+    # print(
+    #     f"diagonal length: {haversine(SOURCE.x, SOURCE.y, SOURCE.x + WIDTH_X, SOURCE.y + HEIGHT_Y)}"
+    # )  # size of diagonal
+    # print(f"point count: {point_counter}")
