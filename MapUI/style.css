@@ -30,13 +30,25 @@
     #map {
         margin-right: 0; /* Adjust the map margin when panel is hidden */
     }
+    .navbar-toggler{
+        color: var(--white-color);
+    }
+    #menu{
+        width: 100%; position: absolute; z-index: 10; height: 100vh;background-color: var(--primary-color);
+        padding: 10px;
+    }
 }
 @media (min-width: 768px){
-    .menu{
+    #menu{
         width: 400px; position: absolute; z-index: 10; height: 100vh;background-color: var(--primary-color);
         padding: 10px;
     }
     .navbar-toggler{
-        background-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+    #map {
+        margin-right: 0; /* Adjust the map margin when panel is hidden */
+        width: calc(100% - 400px);
+        float: right;
     }
 }
