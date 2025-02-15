@@ -143,7 +143,7 @@ def propagate_score(score_map, rowIndex, colIndex, cell):
             x = rowIndex + i
             y = colIndex + j
             if is_coord_valid(x, y):
-                distance = abs(i) + abs(j)
+                distance = sqrt(((i)**2) + ((j)**2))
                 if distance == 0:  # do not influence the cell itself
                     return
                 for feature_index, feature in enumerate(cell.features):
