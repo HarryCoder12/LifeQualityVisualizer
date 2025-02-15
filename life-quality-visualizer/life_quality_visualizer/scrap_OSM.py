@@ -5,9 +5,6 @@ from shapely.geometry import Point
 def get_feature(point, distance ,tags):
     # features: https://wiki.openstreetmap.org/wiki/Map_features
     # return ox.features.features_from_place(place, tags)
-    print(point)
-    print(distance)
-    print(tags)
     return ox.features.features_from_point(point, tags, dist=distance)
 
 
@@ -86,6 +83,7 @@ def get_features(point, distance):
     ]
 
     for feature in features:
+        print(f"Getting {feature['name']} from OSM")
         feature["gdf"] = get_feature(point, distance, feature["tags"])
     return features
 

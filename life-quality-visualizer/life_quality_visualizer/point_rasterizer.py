@@ -85,7 +85,6 @@ def is_in_area(point, source, width, height):
         source.x <= point.x <= source.x + width
         and source.y <= point.y <= source.y + height
     ):
-        print(f"Point {point} is in area")
         return True
     # print(f"Point {point} is not in area")
     return False
@@ -108,6 +107,7 @@ def convert_to_cluster_index(point, source, constants):
 
 
 def get_score_map(c_map, constants):
+    print("Calculate relations")
     score_map = [[GridClass() for _ in range(constants.SIZE_Y)] for _ in range(constants.SIZE_X)]
     for rowIndex, row in enumerate(c_map):
         for colIndex, cell in enumerate(row):
