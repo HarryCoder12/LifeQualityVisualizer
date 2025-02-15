@@ -62,14 +62,15 @@ class GridClass:
 
 SIZE = 1000  # grid size 10 [km]
 ONE_METER_X = 0.00001425
-FIELD_SIZE_X = ONE_METER_X * 10 # 10 [m]
+FIELD_SIZE_X = ONE_METER_X * 20 # 10 [m]
 SIZE_X = 1000  # cells count each FIELD_SIZE_X width
 WIDTH_X = FIELD_SIZE_X * SIZE_X
 
 ONE_METER_Y = 0.000008989
-FIELD_SIZE_Y = ONE_METER_Y * 10
+FIELD_SIZE_Y = ONE_METER_Y * 20
 SIZE_Y = 1000  # cells count each FIELD_SIZE_Y height
 HEIGHT_Y = FIELD_SIZE_Y * SIZE_Y
+FIELD_DIAGONAL = int(sqrt(FIELD_SIZE_X ** 2 + FIELD_SIZE_Y ** 2))
 
 # SOURCE = Point(50.054153, 14.347182)
 # SOURCE = Point(14.445755, 50.085048)
@@ -150,7 +151,7 @@ def propagate_score(score_map, rowIndex, colIndex, cell):
                     if feature:
                         current = score_map[x][y].feature_scores[feature_index]
                         score_map[x][y].feature_scores[feature_index] = max(
-                            current, 1000 // distance
+                            current, 1000 - FIELD_DIAGONAL * distance
                         )  # idk if 1000 is good constant
 
 
