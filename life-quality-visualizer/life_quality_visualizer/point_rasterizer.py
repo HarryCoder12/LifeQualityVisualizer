@@ -60,14 +60,14 @@ class GridClass:
         return False
 
 
-SIZE = 1000  # grid size 10 [km]
+SIZE = 100 # field count 
 ONE_METER_X = 0.00001425
-FIELD_SIZE_X = ONE_METER_X * 20 # 10 [m]
-SIZE_X = 1000  # cells count each FIELD_SIZE_X width
-WIDTH_X = FIELD_SIZE_X * SIZE_X
+FIELD_SIZE_X = ONE_METER_X * 30 # 30 [m]
+SIZE_X = 100  # cells count each FIELD_SIZE_X width
+WIDTH_X = FIELD_SIZE_X * SIZE_X # grid size 3 [km]
 
 ONE_METER_Y = 0.000008989
-FIELD_SIZE_Y = ONE_METER_Y * 20
+FIELD_SIZE_Y = ONE_METER_Y * 30
 SIZE_Y = 1000  # cells count each FIELD_SIZE_Y height
 HEIGHT_Y = FIELD_SIZE_Y * SIZE_Y
 FIELD_DIAGONAL = int(sqrt(FIELD_SIZE_X ** 2 + FIELD_SIZE_Y ** 2))
@@ -76,8 +76,8 @@ FIELD_DIAGONAL = int(sqrt(FIELD_SIZE_X ** 2 + FIELD_SIZE_Y ** 2))
 # SOURCE = Point(14.445755, 50.085048)
 # SOURCE = Point(14.443862, 50.085356) # Zizkov, Karlin
 # SOURCE = Point(14.38857, 50.10448) # CVUT campus
-SOURCE = Point(14.37269, 50.05504) # Radlice 
-point_counter = 0
+# SOURCE = Point(14.37269, 50.05504) # Radlice 
+SOURCE = Point(14.42898, 50.08839) # Namesti Republiky
 
 
 def haversine(lon1, lat1, lon2, lat2):
@@ -109,13 +109,11 @@ def is_in_area(point, source, width, height):
 
 
 def place_in_cluster(cluster_map, point, type, source, width, height):
-    global point_counter
     if point.geom_type != "Point":
         return
     if not is_in_area(point, source, width, height):
         return
 
-    point_counter += 1
     x, y = convert_to_cluster_index(point, source)
     cluster_map[x][y].add_type(type, point)
 
@@ -196,4 +194,3 @@ if __name__ == "__main__":
     # print(
     #     f"diagonal length: {haversine(SOURCE.x, SOURCE.y, SOURCE.x + WIDTH_X, SOURCE.y + HEIGHT_Y)}"
     # )  # size of diagonal
-    # print(f"point count: {point_counter}")
