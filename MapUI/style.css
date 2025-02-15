@@ -1,6 +1,6 @@
 :root {
     /* Define color variables */
-    --primary-color: #007bff; /* Blue */
+    --primary-color: #86b6ee; /* Blue */
     --secondary-color: #6c757d; /* Gray */
     --success-color: #28a745; /* Green */
     --danger-color: #dc3545; /* Red */
@@ -22,8 +22,21 @@
     transition: margin-right 0.3s ease-in-out;
 }
 
-
-
+h5{
+    color: var(--white-color);
+}
+.svalue{
+    color: var(--white-color);
+}
+.uppermenu{
+    background-color: var(--primary-color);
+}
+.main{
+    width: 80%;
+    background-color: var(--light-color);
+    margin: auto;
+    padding: 25px;
+}
 /* For responsive UI */
 @media (max-width: 767px) {
 

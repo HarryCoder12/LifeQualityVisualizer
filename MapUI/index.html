@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenLayers GeoJSON Example</title>
+    <title>Life Quality Visualizer</title>
 
     <!-- Include OpenLayers CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.4.0/ol.css">
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="bg-primary d-flex justify-content-between align-items-center" style="height: 60px; padding-right: 10px;">
+<div class="uppermenu d-flex justify-content-between align-items-center" style="height: 60px; padding-right: 10px;">
 
 
     <!-- Hamburger Button on the Left -->
@@ -32,52 +32,51 @@ menu
 </div>
 
 <div id="menu">
-        <h5 >Heat map parameters</h5>
+        <h5>Heat map parameters</h5>
     <div class="offcanvas-body">
         <ul class="list-unstyled">
             <!-- ordering: public_transport, school, green_area, health_care, sport_facility, shop, restaurant-->
 
             <li><a href="#" class="text-white text-decoration-none d-block py-2">Public Transport</a></li>
             <input type="range" class="form-range" id="slider0" min="0" max="100" value="50"  style="width: calc( 100% - 20px ); margin:10px;">
-            <p class="text-center mt-2">Value: <span class="slider-value" id="sliderValue0">50</span></p>
+            <p class="text-center mt-2 svalue">Value: <span class="slider-value" id="sliderValue0">50</span></p>
 
 
             <li><a href="#" class="text-white text-decoration-none d-block py-2">Schools</a></li>
             <input type="range" class="form-range" id="slider1" min="0" max="100" value="50"  style="width: calc( 100% - 20px ); margin:10px;">
-            <p class="text-center mt-2">Value: <span class="slider-value" id="sliderValue1">50</span></p>
+            <p class="text-center mt-2 svalue">Value: <span class="slider-value" id="sliderValue1">50</span></p>
 
 
             <li><a href="#" class="text-white text-decoration-none d-block py-2">Green Area</a></li>
             <input type="range" class="form-range" id="slider2" min="0" max="100" value="50"  style="width: calc( 100% - 20px ); margin:10px;">
-            <p class="text-center mt-2">Value: <span class="slider-value" id="sliderValue2">50</span></p>
+            <p class="text-center mt-2 svalue">Value: <span class="slider-value" id="sliderValue2">50</span></p>
 
 
             <li><a href="#" class="text-white text-decoration-none d-block py-2">Health care</a></li>
             <input type="range" class="form-range" id="slider3" min="0" max="100" value="50"  style="width: calc( 100% - 20px ); margin:10px;">
-            <p class="text-center mt-2">Value: <span class="slider-value" id="sliderValue3">50</span></p>
+            <p class="text-center mt-2 svalue">Value: <span class="slider-value" id="sliderValue3">50</span></p>
 
 
             <li><a href="#" class="text-white text-decoration-none d-block py-2">Sport Facility</a></li>
             <input type="range" class="form-range" id="slider4" min="0" max="100" value="50"  style="width: calc( 100% - 20px ); margin:10px;">
-            <p class="text-center mt-2">Value: <span class="slider-value" id="sliderValue4">50</span></p>
+            <p class="text-center mt-2 svalue">Value: <span class="slider-value" id="sliderValue4">50</span></p>
 
 
             <li><a href="#" class="text-white text-decoration-none d-block py-2">Shops</a></li>
             <input type="range" class="form-range" id="slider5" min="0" max="100" value="50"  style="width: calc( 100% - 20px ); margin:10px;">
-            <p class="text-center mt-2">Value: <span class="slider-value" id="sliderValue5">50</span></p>
+            <p class="text-center mt-2 svalue">Value: <span class="slider-value" id="sliderValue5">50</span></p>
 
             <li><a href="#" class="text-white text-decoration-none d-block py-2">Restaurants</a></li>
             <input type="range" class="form-range" id="slider6" min="0" max="100" value="50"  style="width: calc( 100% - 20px ); margin:10px;">
-            <p class="text-center mt-2">Value: <span class="slider-value" id="sliderValue6">50</span></p>
+            <p class="text-center mt-2 svalue">Value: <span class="slider-value" id="sliderValue6">50</span></p>
 
         </ul>
-        <button id="recountButton">recount</button>
+        <button id="recountButton">přepočítat</button>
         <h5 >Předpřipravené režimy</h5>
         <button id="autofillSenior">důchodec</button>
         <button id="autofillParent">rodič</button>
         <button id="autofillWorking">pracující</button>
         <button id="autofillStudent">student</button>
-        <button></button>
     </div>
 </div>
 

@@ -8,9 +8,10 @@ var map = new ol.Map({
         })
     ],
     view: new ol.View({
-        center: ol.proj.fromLonLat([14.445, 50.08  ]), // Center the map (in lon/lat)
-        zoom: 18 // Initial zoom level
+        center: ol.proj.fromLonLat([14.33, 50.06  ]), // Center the map (in lon/lat)
+        zoom: 16.5 // Initial zoom level
     })
+
 });
 let multiplicator = Array(0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5);
 multiplicatorsum = 3.5;
@@ -55,7 +56,7 @@ function newWeightFunction(feature) {
 }
 $("#recountButton").click(function (){
     multiplicatorsum = 0;
-    for(var j = 0; j<8; j++) {
+    for(var j = 0; j<7; j++) {
         multiplicatorsum += multiplicator[j];
     }
     map.removeLayer(heatmapLayer);
@@ -64,11 +65,9 @@ $("#recountButton").click(function (){
             url: 'lifeQuality.geojson', // Load GeoJSON file
             format: new ol.format.GeoJSON()
         }),
-        blur: 25,   // Adjusts the smoothness of the heatmap
+        blur: 15,   // Adjusts the smoothness of the heatmap
         opacity: 0.7,
-        radius: 25,  // Controls the size of individual heat points
-        minZoom: 18,
-        maxZoom: 18,
+        radius: 15,  // Controls the size of individual heat points
         weight: function(feature) {
             // Use the "value" property in GeoJSON to determine intensity
             return indexCalculator(feature.values_.feature); // Default weight is 1 if "value" is missing
@@ -79,7 +78,28 @@ $("#recountButton").click(function (){
 $("#autofillSenior").click(function(){
     multiplicator = Array(0.9,0.1,0.5,0.8,0.5,0.2,0.9,0.1);
     for (let i = 0; i <= 7; i++) {
-        $(`#sliderValue${i}`).text(multiplicator[i]);
-        $(`#slider${i}`).val(multiplicator[i]);
+        $(`#sliderValue${i}`).text(multiplicator[i]*100);
+        $(`#slider${i}`).val(multiplicator[i]*100);
+    }
+})
+$("#autofillParent").click(function(){
+    multiplicator = Array(0.5,0.8,0.5,0.2,0.5,0.5,0.5,0.1);
+    for (let i = 0; i <= 7; i++) {
+        $(`#sliderValue${i}`).text(multiplicator[i]*100);
+        $(`#slider${i}`).val(multiplicator[i]*100);
+    }
+})
+$("#autofillWorking").click(function(){
+    multiplicator = Array(0.5,0.1,0.5,0.1,0.7,0.7,0.2,0.9);
+    for (let i = 0; i <= 7; i++) {
+        $(`#sliderValue${i}`).text(multiplicator[i]*100);
+        $(`#slider${i}`).val(multiplicator[i]*100);
+    }
+})
+$("#autofillStudent").click(function(){
+    multiplicator = Array(0.5,0.9,0.1,0,0.5,0.8,0.9,0.9);
+    for (let i = 0; i <= 7; i++) {
+        $(`#sliderValue${i}`).text(multiplicator[i]*100);
+        $(`#slider${i}`).val(multiplicator[i]*100);
     }
 })
