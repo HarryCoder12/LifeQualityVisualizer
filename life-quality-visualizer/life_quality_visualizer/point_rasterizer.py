@@ -78,7 +78,8 @@ FIELD_DIAGONAL = int(sqrt(FIELD_SIZE_X**2 + FIELD_SIZE_Y**2))
 # SOURCE = Point(14.38857, 50.10448) # CVUT campus
 # SOURCE = Point(14.37269, 50.05504) # Radlice
 # SOURCE = Point(14.42898, 50.08839)  # Namesti Republiky
-SOURCE = Point(14.42108, 50.06247) #Vysehrad
+# SOURCE = Point(14.42108, 50.06247) #Vysehrad
+SOURCE = Point( 14.31167, 50.03972 ) # Stodulky
 
 
 def haversine(lon1, lat1, lon2, lat2):
