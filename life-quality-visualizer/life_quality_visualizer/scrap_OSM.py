@@ -1,12 +1,17 @@
 import osmnx as ox
+from shapely.geometry import Point
 
 
-def get_feature(place, tags):
+def get_feature(point, distance ,tags):
     # features: https://wiki.openstreetmap.org/wiki/Map_features
-    return ox.features.features_from_place(place, tags)
+    # return ox.features.features_from_place(place, tags)
+    print(point)
+    print(distance)
+    print(tags)
+    return ox.features.features_from_point(point, tags, dist=distance)
 
 
-def get_features(place="Prague, Czechia"):
+def get_features(point, distance):
     features = [
         {
             "name": "schools",
@@ -81,7 +86,7 @@ def get_features(place="Prague, Czechia"):
     ]
 
     for feature in features:
-        feature["gdf"] = get_feature(place, feature["tags"])
+        feature["gdf"] = get_feature(point, distance, feature["tags"])
     return features
 
 
@@ -92,6 +97,11 @@ def write_geojson(gdf_name):
         ) as f:
             f.write(feature["gdf"].to_json())
 
+def get_data(point, distance):
+    print(distance)
+    return write_geojson(get_features(point, distance))
+
 
 if __name__ == "__main__":
-    write_geojson(get_features())
+    point = [50.03972, 14.31167] # left bottom corner
+    get_data(point, 1000)

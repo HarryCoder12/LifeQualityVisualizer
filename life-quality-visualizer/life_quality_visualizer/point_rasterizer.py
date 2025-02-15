@@ -4,6 +4,7 @@ from math import radians, cos, sin, asin, sqrt
 from dataclasses import dataclass
 from data_processing import get_sanitezed_data
 from shapely.geometry import Point
+import constants
 
 
 @dataclass
@@ -59,29 +60,7 @@ class GridClass:
                 return True
         return False
 
-
-SIZE = 100  # field count
-ONE_METER_X = 0.00001425
-FIELD_SIZE_X = ONE_METER_X * 30  # 30 [m]
-SIZE_X = 100  # cells count each FIELD_SIZE_X width
-WIDTH_X = FIELD_SIZE_X * SIZE_X  # grid size 3 [km]
-
-ONE_METER_Y = 0.000008989
-FIELD_SIZE_Y = ONE_METER_Y * 30
-SIZE_Y = 100  # cells count each FIELD_SIZE_Y height
-HEIGHT_Y = FIELD_SIZE_Y * SIZE_Y
-FIELD_DIAGONAL = int(sqrt(FIELD_SIZE_X**2 + FIELD_SIZE_Y**2))
-
-# SOURCE = Point(50.054153, 14.347182)
-# SOURCE = Point(14.445755, 50.085048)
-# SOURCE = Point(14.443862, 50.085356) # Zizkov, Karlin
-# SOURCE = Point(14.38857, 50.10448) # CVUT campus
-# SOURCE = Point(14.37269, 50.05504) # Radlice
-# SOURCE = Point(14.42898, 50.08839)  # Namesti Republiky
-# SOURCE = Point(14.42108, 50.06247) #Vysehrad
-SOURCE = Point( 14.31167, 50.03972 ) # Stodulky
-
-
+        
 def haversine(lon1, lat1, lon2, lat2):
     """
     Calculate the great circle distance in kilometers between two points
@@ -110,40 +89,40 @@ def is_in_area(point, source, width, height):
     return False
 
 
-def place_in_cluster(cluster_map, point, type, source, width, height):
+def place_in_cluster(cluster_map, point, type, constants):
     if point.geom_type != "Point":
         return
-    if not is_in_area(point, source, width, height):
+    if not is_in_area(point, constants.SOURCE, constants.WIDTH_X, constants.HEIGHT_Y):
         return
 
-    x, y = convert_to_cluster_index(point, source)
+    x, y = convert_to_cluster_index(point, constants.SOURCE, constants)
     cluster_map[x][y].add_type(type, point)
 
 
-def convert_to_cluster_index(point, source):
-    x = int((point.x - source.x) / FIELD_SIZE_X)
-    y = int((point.y - source.y) / FIELD_SIZE_Y)
+def convert_to_cluster_index(point, source, constants):
+    x = int((point.x - source.x) / constants.FIELD_SIZE_X)
+    y = int((point.y - source.y) / constants.FIELD_SIZE_Y)
     return x, y
 
 
-def get_score_map(c_map):
-    score_map = [[GridClass() for _ in range(SIZE_Y)] for _ in range(SIZE_X)]
+def get_score_map(c_map, constants):
+    score_map = [[GridClass() for _ in range(constants.SIZE_Y)] for _ in range(constants.SIZE_X)]
     for rowIndex, row in enumerate(c_map):
         for colIndex, cell in enumerate(row):
             if cell.has_data():
-                propagate_score(score_map, rowIndex, colIndex, cell)
+                propagate_score(score_map, rowIndex, colIndex, cell, constants)
             score_map[rowIndex][colIndex].x = c_map[rowIndex][colIndex].x
             score_map[rowIndex][colIndex].y = c_map[rowIndex][colIndex].y
     return score_map
 
 
-def propagate_score(score_map, rowIndex, colIndex, cell):
+def propagate_score(score_map, rowIndex, colIndex, cell, constants):
     INFLUENCE_RADIUS = 12
     for i in range(-INFLUENCE_RADIUS, INFLUENCE_RADIUS):
         for j in range(-INFLUENCE_RADIUS, INFLUENCE_RADIUS):
             x = rowIndex + i
             y = colIndex + j
-            if is_coord_valid(x, y):
+            if is_coord_valid(x, y, constants):
                 distance = sqrt(((i) ** 2) + ((j) ** 2))
                 if distance == 0:# or distance > INFLUENCE_RADIUS:  # do not influence the cell itself or cells that are too far
                     return
@@ -151,7 +130,7 @@ def propagate_score(score_map, rowIndex, colIndex, cell):
                     if feature:
                         current = score_map[x][y].feature_scores[feature_index]
                         score_map[x][y].feature_scores[feature_index] = max(
-                            current, 1000 - FIELD_DIAGONAL * distance
+                            current, 1000 - constants.FIELD_DIAGONAL * distance
                         )  # idk if 1000 is good constant
 
 
@@ -167,17 +146,17 @@ def convert_score_map_to_geo_json(score_map):
     return gdf
 
 
-def is_coord_valid(x, y):
-    return 0 <= x < SIZE_X and 0 <= y < SIZE_Y
+def is_coord_valid(x, y, constants):
+    return 0 <= x < constants.SIZE_X and 0 <= y < constants.SIZE_Y
 
 
-if __name__ == "__main__":
+def generate_score_geojson(constants):
     cluster_map = [
         [
-            ClusterQuality(SOURCE.x + x * FIELD_SIZE_X, SOURCE.y + y * FIELD_SIZE_Y)
-            for y in range(SIZE_Y)
+            ClusterQuality(constants.SOURCE.x + x * constants.FIELD_SIZE_X, constants.SOURCE.y + y * constants.FIELD_SIZE_Y)
+            for y in range(constants.SIZE_Y)
         ]
-        for x in range(SIZE_X)
+        for x in range(constants.SIZE_X)
     ]
 
     # sanitized_data = geopandas.read_file("sanitized-data/everything.geojson")
@@ -185,10 +164,10 @@ if __name__ == "__main__":
     for index, row in get_sanitezed_data().iterrows():
         point = row["geometry"]
         type = row["type"]
-        place_in_cluster(cluster_map, point, type, SOURCE, WIDTH_X, HEIGHT_Y)
+        place_in_cluster(cluster_map, point, type, constants)
     # print(cluster_map)
 
-    score_map = get_score_map(cluster_map)
+    score_map = get_score_map(cluster_map, constants)
     gdf = convert_score_map_to_geo_json(score_map)
     with open("sanitized-data/lifeQuality.geojson", "w", encoding="UTF-8") as f:
         f.write(gdf.to_json())
@@ -196,3 +175,7 @@ if __name__ == "__main__":
     # print(
     #     f"diagonal length: {haversine(SOURCE.x, SOURCE.y, SOURCE.x + WIDTH_X, SOURCE.y + HEIGHT_Y)}"
     # )  # size of diagonal
+
+if __name__ == "__main__":
+    constants = constants.PositionalConstants(Point(50.03972, 14.31167), 100, 30, 100, 30)
+    generate_score_geojson(constants)
