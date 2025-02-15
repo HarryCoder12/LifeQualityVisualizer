@@ -60,20 +60,21 @@ class GridClass:
         return False
 
 
-SIZE = 1000  # grid size
+SIZE = 1000  # grid size 10 [km]
 ONE_METER_X = 0.00001425
-FIELD_SIZE_X = ONE_METER_X * 10
+FIELD_SIZE_X = ONE_METER_X * 10 # 10 [m]
 SIZE_X = 1000  # cells count each FIELD_SIZE_X width
 WIDTH_X = FIELD_SIZE_X * SIZE_X
 
 ONE_METER_Y = 0.000008989
 FIELD_SIZE_Y = ONE_METER_Y * 10
-SIZE_Y = 100  # cells count each FIELD_SIZE_Y height
+SIZE_Y = 1000  # cells count each FIELD_SIZE_Y height
 HEIGHT_Y = FIELD_SIZE_Y * SIZE_Y
 
 # SOURCE = Point(50.054153, 14.347182)
 # SOURCE = Point(14.445755, 50.085048)
-SOURCE = Point(14.443862, 50.085356)
+# SOURCE = Point(14.443862, 50.085356) # Zizkov, Karlin
+SOURCE = Point(14.38857, 50.10448) # CVUT campus
 point_counter = 0
 
 
