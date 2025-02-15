@@ -23,10 +23,20 @@
 }
 
 
+
 /* For responsive UI */
 @media (max-width: 767px) {
 
     #map {
         margin-right: 0; /* Adjust the map margin when panel is hidden */
+    }
+}
+@media (min-width: 768px){
+    .menu{
+        width: 400px; position: absolute; z-index: 10; height: 100vh;background-color: var(--primary-color);
+        padding: 10px;
+    }
+    .navbar-toggler{
+        background-color: var(--primary-color);
     }
 }

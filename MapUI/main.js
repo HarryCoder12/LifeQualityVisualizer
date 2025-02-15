@@ -14,13 +14,17 @@ var map = new ol.Map({
 });
 
 // Create a vector layer to hold GeoJSON data
-var vectorLayer = new ol.layer.Vector({
+var heatmapLayer = new ol.layer.Heatmap({
     source: new ol.source.Vector({
-        // URL to your GeoJSON file
-        url: 'path/to/your/file.geojson',
+        url: 'everything.geojson', // Load GeoJSON file
         format: new ol.format.GeoJSON()
-    })
+    }),
+    blur: 15,   // Adjusts the smoothness of the heatmap
+    radius: 8,  // Controls the size of individual heat points
+    weight: function(feature) {
+        // Use the "value" property in GeoJSON to determine intensity
+        return feature.get('value') || 1; // Default weight is 1 if "value" is missing
+    }
 });
-
 // Add the vector layer with GeoJSON to the map
-map.addLayer(vectorLayer);
+map.addLayer(heatmapLayer);
