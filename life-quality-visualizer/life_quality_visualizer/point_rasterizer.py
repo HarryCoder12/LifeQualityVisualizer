@@ -137,7 +137,7 @@ def get_score_map(c_map):
 
 
 def propagate_score(score_map, rowIndex, colIndex, cell):
-    INFLUENCE_RADIUS = 9
+    INFLUENCE_RADIUS = 12
     for i in range(-INFLUENCE_RADIUS, INFLUENCE_RADIUS):
         for j in range(-INFLUENCE_RADIUS, INFLUENCE_RADIUS):
             x = rowIndex + i
