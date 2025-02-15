@@ -8,8 +8,8 @@ var map = new ol.Map({
         })
     ],
     view: new ol.View({
-        center: ol.proj.fromLonLat([14.47, 50.09  ]), // Center the map (in lon/lat)
-        zoom: 16 // Initial zoom level
+        center: ol.proj.fromLonLat([14.445, 50.08  ]), // Center the map (in lon/lat)
+        zoom: 18 // Initial zoom level
     })
 });
 let multiplicator = Array(0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5);
@@ -54,6 +54,7 @@ function newWeightFunction(feature) {
     return indexCalculator(feature.values_.feature);  // Assuming your GeoJSON has a 'newValue' field
 }
 $("#recountButton").click(function (){
+    multiplicatorsum = 0;
     for(var j = 0; j<8; j++) {
         multiplicatorsum += multiplicator[j];
     }
@@ -63,13 +64,22 @@ $("#recountButton").click(function (){
             url: 'lifeQuality.geojson', // Load GeoJSON file
             format: new ol.format.GeoJSON()
         }),
-        blur: 15,   // Adjusts the smoothness of the heatmap
+        blur: 25,   // Adjusts the smoothness of the heatmap
         opacity: 0.7,
-        radius: 15,  // Controls the size of individual heat points
+        radius: 25,  // Controls the size of individual heat points
+        minZoom: 18,
+        maxZoom: 18,
         weight: function(feature) {
             // Use the "value" property in GeoJSON to determine intensity
             return indexCalculator(feature.values_.feature); // Default weight is 1 if "value" is missing
         }
     });
     map.addLayer(heatmapLayer);
+})
+$("#autofillSenior").click(function(){
+    multiplicator = Array(0.9,0.1,0.5,0.8,0.5,0.2,0.9,0.1);
+    for (let i = 0; i <= 7; i++) {
+        $(`#sliderValue${i}`).text(multiplicator[i]);
+        $(`#slider${i}`).val(multiplicator[i]);
+    }
 })
