@@ -37,6 +37,9 @@ h5{
     margin: auto;
     padding: 25px;
 }
+body{
+    background-color: var(--primary-color);
+}
 /* For responsive UI */
 @media (max-width: 767px) {
 

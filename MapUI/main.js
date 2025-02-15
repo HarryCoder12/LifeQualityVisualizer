@@ -103,3 +103,6 @@ $("#autofillStudent").click(function(){
         $(`#slider${i}`).val(multiplicator[i]*100);
     }
 })
+$("#advancedOptionsButton").click(function (){
+    $('#advancedOptions').toggle();
+})

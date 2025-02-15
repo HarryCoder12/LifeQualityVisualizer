@@ -16,7 +16,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=menu" />
     <link rel="stylesheet" href="style.css">
-</head>
+    </head>
 <body>
 <div class="uppermenu d-flex justify-content-between align-items-center" style="height: 60px; padding-right: 10px;">
 
@@ -33,7 +33,17 @@ menu
 
 <div id="menu">
         <h5>Heat map parameters</h5>
-    <div class="offcanvas-body">
+    <button id="autofillSenior">Senior</button>
+    <button id="autofillParent">Parent</button>
+    <button id="autofillWorking">Employee</button>
+    <button id="autofillStudent">Student</button>
+    <br><br>
+
+    <div id="advancedOptionsButton">
+
+        ↓  Advanced options</div>
+    <div class="offcanvas-body" style="display: none" id="advancedOptions">
+
         <ul class="list-unstyled">
             <!-- ordering: public_transport, school, green_area, health_care, sport_facility, shop, restaurant-->
 
@@ -72,11 +82,7 @@ menu
 
         </ul>
         <button id="recountButton">přepočítat</button>
-        <h5 >Předpřipravené režimy</h5>
-        <button id="autofillSenior">důchodec</button>
-        <button id="autofillParent">rodič</button>
-        <button id="autofillWorking">pracující</button>
-        <button id="autofillStudent">student</button>
+
     </div>
 </div>
 
