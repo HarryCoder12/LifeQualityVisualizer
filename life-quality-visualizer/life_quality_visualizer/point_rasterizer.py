@@ -60,24 +60,25 @@ class GridClass:
         return False
 
 
-SIZE = 100 # field count 
+SIZE = 100  # field count
 ONE_METER_X = 0.00001425
-FIELD_SIZE_X = ONE_METER_X * 30 # 30 [m]
+FIELD_SIZE_X = ONE_METER_X * 30  # 30 [m]
 SIZE_X = 100  # cells count each FIELD_SIZE_X width
-WIDTH_X = FIELD_SIZE_X * SIZE_X # grid size 3 [km]
+WIDTH_X = FIELD_SIZE_X * SIZE_X  # grid size 3 [km]
 
 ONE_METER_Y = 0.000008989
 FIELD_SIZE_Y = ONE_METER_Y * 30
-SIZE_Y = 1000  # cells count each FIELD_SIZE_Y height
+SIZE_Y = 100  # cells count each FIELD_SIZE_Y height
 HEIGHT_Y = FIELD_SIZE_Y * SIZE_Y
-FIELD_DIAGONAL = int(sqrt(FIELD_SIZE_X ** 2 + FIELD_SIZE_Y ** 2))
+FIELD_DIAGONAL = int(sqrt(FIELD_SIZE_X**2 + FIELD_SIZE_Y**2))
 
 # SOURCE = Point(50.054153, 14.347182)
 # SOURCE = Point(14.445755, 50.085048)
 # SOURCE = Point(14.443862, 50.085356) # Zizkov, Karlin
 # SOURCE = Point(14.38857, 50.10448) # CVUT campus
-# SOURCE = Point(14.37269, 50.05504) # Radlice 
-SOURCE = Point(14.42898, 50.08839) # Namesti Republiky
+# SOURCE = Point(14.37269, 50.05504) # Radlice
+# SOURCE = Point(14.42898, 50.08839)  # Namesti Republiky
+SOURCE = Point(14.42108, 50.06247) #Vysehrad
 
 
 def haversine(lon1, lat1, lon2, lat2):
@@ -142,7 +143,7 @@ def propagate_score(score_map, rowIndex, colIndex, cell):
             x = rowIndex + i
             y = colIndex + j
             if is_coord_valid(x, y):
-                distance = sqrt(((i)**2) + ((j)**2))
+                distance = sqrt(((i) ** 2) + ((j) ** 2))
                 if distance == 0:  # do not influence the cell itself
                     return
                 for feature_index, feature in enumerate(cell.features):
