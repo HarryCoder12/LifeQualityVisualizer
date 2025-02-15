@@ -33,8 +33,8 @@ def get_features(place="Prague, Czechia"):
         {
             "name": "greenAreas",
             "tags": {
-                "landuse": ["forest", "grass"],
-                "leisure": ["park", "garden"],
+                "landuse": ["forest"],
+                "leisure": ["park"],
             },
         },
         {
@@ -71,12 +71,12 @@ def get_features(place="Prague, Czechia"):
                 "amenity": ["bar", "cafe", "fast_food", "pub", "restaurant"],
             },
         },
-        {
-            "name": "noise",
-            "tags": {
-                "highway": ["motorway", "trunk", "primary"],
-            }
-        }
+        # {
+        #     "name": "noise",
+        #     "tags": {
+        #         "highway": ["motorway", "trunk", "primary"],
+        #     }
+        # }
         #TODO: urady, 
     ]
 
