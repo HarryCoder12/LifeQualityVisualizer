@@ -18,7 +18,7 @@ class PositionalConstants:
     # SOURCE = 0
 
     def __init__(self, source, cell_count_x, cell_size_x, cell_count_y, cell_size_y):
-        self.SOURCE = source
+        self.SOURCE = Point(source.y, source.x)
         
         self.FIELD_SIZE_X = cell_size_x * self.ONE_METER_X
         self.SIZE_X = cell_count_x
@@ -33,7 +33,7 @@ class PositionalConstants:
         self.FIELD_DIAGONAL = int(sqrt(self.FIELD_SIZE_X**2 + self.FIELD_SIZE_Y**2))
     
     def get_middle(self):
-        return [self.SOURCE.x + self.WIDTH_X / 2, self.SOURCE.y + self.HEIGHT_Y / 2]
+        return [self.SOURCE.y + self.HEIGHT_Y / 2, self.SOURCE.x + self.WIDTH_X / 2 ]
     
     def get_max_distance(self):
         print(self.WIDTH_X)

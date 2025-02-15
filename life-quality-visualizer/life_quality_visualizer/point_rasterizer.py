@@ -85,7 +85,9 @@ def is_in_area(point, source, width, height):
         source.x <= point.x <= source.x + width
         and source.y <= point.y <= source.y + height
     ):
+        print(f"Point {point} is in area")
         return True
+    # print(f"Point {point} is not in area")
     return False
 
 
