@@ -36,8 +36,6 @@ class PositionalConstants:
         return [self.SOURCE.y + self.HEIGHT_Y / 2, self.SOURCE.x + self.WIDTH_X / 2 ]
     
     def get_max_distance(self):
-        print(self.WIDTH_X)
-        print(self.HEIGHT_Y)
         return sqrt(self.WIDTH_X_meter**2 + self.HEIGHT_Y_meter**2)
 
 
