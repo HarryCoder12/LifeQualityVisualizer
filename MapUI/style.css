@@ -57,7 +57,6 @@ h5{
     #menu{
         width: 400px; position: absolute; z-index: 10;background-color: var(--primary-color);
         padding: 10px;
-        height: calc( 100vh - 60px ); /* Full screen height */
         overflow-y: scroll;
     }
     .navbar-toggler{
