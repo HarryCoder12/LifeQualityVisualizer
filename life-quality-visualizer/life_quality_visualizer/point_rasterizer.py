@@ -74,7 +74,8 @@ HEIGHT_Y = FIELD_SIZE_Y * SIZE_Y
 # SOURCE = Point(50.054153, 14.347182)
 # SOURCE = Point(14.445755, 50.085048)
 # SOURCE = Point(14.443862, 50.085356) # Zizkov, Karlin
-SOURCE = Point(14.38857, 50.10448) # CVUT campus
+# SOURCE = Point(14.38857, 50.10448) # CVUT campus
+SOURCE = Point(14.37269, 50.05504) # Radlice 
 point_counter = 0
 
 
