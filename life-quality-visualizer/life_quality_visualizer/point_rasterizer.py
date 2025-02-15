@@ -144,7 +144,7 @@ def propagate_score(score_map, rowIndex, colIndex, cell):
             y = colIndex + j
             if is_coord_valid(x, y):
                 distance = sqrt(((i) ** 2) + ((j) ** 2))
-                if distance == 0:  # do not influence the cell itself
+                if distance == 0 or distance > INFLUENCE_RADIUS:  # do not influence the cell itself or cells that are too far
                     return
                 for feature_index, feature in enumerate(cell.features):
                     if feature:
