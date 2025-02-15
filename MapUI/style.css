@@ -18,7 +18,7 @@
 }
 
 #map {
-    height: 100vh; /* Full screen height */
+    height: calc( 100vh - 60px ); /* Full screen height */
     transition: margin-right 0.3s ease-in-out;
 }
 
@@ -34,14 +34,18 @@
         color: var(--white-color);
     }
     #menu{
-        width: 100%; position: absolute; z-index: 10; height: 100vh;background-color: var(--primary-color);
-        padding: 10px;
+        width: 100%; position: absolute; z-index: 10;;background-color: var(--primary-color);
+        padding: 10px; display: none;
+        height: calc( 100vh - 60px ); /* Full screen height */
+
     }
 }
 @media (min-width: 768px){
     #menu{
-        width: 400px; position: absolute; z-index: 10; height: 100vh;background-color: var(--primary-color);
+        width: 400px; position: absolute; z-index: 10;background-color: var(--primary-color);
         padding: 10px;
+        height: calc( 100vh - 60px ); /* Full screen height */
+        overflow-y: scroll;
     }
     .navbar-toggler{
         color: var(--primary-color);
